@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculadora de Riesgo NMIBC - DEMO</title>
+  <style>
+    body {
+      font-family: Calibri, Arial, sans-serif;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #003366;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+      background: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+    select, input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px;
+      width: 100%;
+      background: #003366;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .result {
+      margin-top: 20px;
+      padding: 15px;
+      background: #e6f2ff;
+      border-left: 5px solid #003366;
+    }
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Calculadora de Riesgo de Recurrencia (NMIBC)</h1>
+    <h2>30º Congreso Sociedad Canaria de Urología</h2>
+    <p style="text-align:center; font-weight:bold;">Autor: Cristian Expósito Rodríguez</p>
+    <p><strong>Nota:</strong> Esta herramienta es una <u>DEMO educativa</u>, no debe usarse para decisiones clínicas.</p>
+
+    <form id="calcForm">
+      <label>Edad</label>
+      <input type="number" id="edad" min="20" max="100">
+
+      <label>Índice de Charlson</label>
+      <input type="number" id="charlson" min="0" max="10">
+
+      <label>IMC</label>
+      <input type="number" id="imc" min="15" max="40">
+
+      <label>Tabaquismo</label>
+      <select id="tabaquismo">
+        <option value="0">No</option>
+        <option value="1">Sí</option>
+      </select>
+
+      <label>Número de tumores</label>
+      <input type="number" id="num_tumores" min="1" max="10">
+
+      <label>Tamaño tumoral (cm)</label>
+      <input type="number" id="tamano" step="0.1">
+
+      <label>Grado tumoral</label>
+      <select id="grado">
+        <option value="1">Bajo</option>
+        <option value="2">Alto</option>
+      </select>
+
+      <label>Carcinoma in situ (CIS)</label>
+      <select id="cis">
+        <option value="0">No</option>
+        <option value="1">Sí</option>
+      </select>
+
+      <label>Recurrencia previa</label>
+      <select id="rec_prev">
+        <option value="0">No</option>
+        <option value="1">Sí</option>
+      </select>
+
+      <label>BCG completa</label>
+      <select id="bcg">
+        <option value="1">Sí</option>
+        <option value="0">No</option>
+      </select>
+
+      <button type="button" onclick="calcular()">Calcular riesgo</button>
+    </form>
+
+    <div class="result" id="resultado"></div>
+  </div>
+
+  <footer>
+    © 2025 Cristian Expósito Rodríguez · DEMO para póster científico
+  </footer>
+
+  <script>
+    function calcular() {
+      let edad = parseInt(document.getElementById('edad').value) || 0;
+      let charlson = parseInt(document.getElementById('charlson').value) || 0;
+      let imc = parseInt(document.getElementById('imc').value) || 0;
+      let tabaquismo = parseInt(document.getElementById('tabaquismo').value);
+      let num_tumores = parseInt(document.getElementById('num_tumores').value) || 0;
+      let tamano = parseFloat(document.getElementById('tamano').value) || 0;
+      let grado = parseInt(document.getElementById('grado').value);
+      let cis = parseInt(document.getElementById('cis').value);
+      let rec_prev = parseInt(document.getElementById('rec_prev').value);
+      let bcg = parseInt(document.getElementById('bcg').value);
+
+      // Modelo simplificado demo (no real)
+      let score = 0;
+      score += (edad > 70 ? 1 : 0);
+      score += charlson * 0.5;
+      score += (imc > 30 ? 0.5 : 0);
+      score += tabaquismo * 0.5;
+      score += num_tumores * 0.2;
+      score += (tamano > 3 ? 1 : 0);
+      score += (grado === 2 ? 1 : 0);
+      score += cis * 1;
+      score += rec_prev * 1;
+      score += (bcg === 1 ? -1 : 1);
+
+      let riesgo;
+      if (score < 2) {
+        riesgo = "Bajo (~18% a 24 meses)";
+      } else if (score < 5) {
+        riesgo = "Intermedio (~42% a 24 meses)";
+      } else {
+        riesgo = "Alto (~67% a 24 meses)";
+      }
+
+      document.getElementById('resultado').innerHTML = "<h3>Resultado:</h3><p>Riesgo estimado: <strong>" + riesgo + "</strong></p>";
+    }
+  </script>
+</body>
+</html>
